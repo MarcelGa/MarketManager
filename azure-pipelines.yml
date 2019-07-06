@@ -16,7 +16,6 @@ steps:
     dotnet restore '$(solution)'
     dotnet build '$(solution)' --configuration $(buildConfiguration)
     dotnet test '$(solution)' --configuration $(buildConfiguration) --logger trx
-    dotnet publish ./MyProject.Web --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)
   workingDirectory: $(workingDirectory)
 
 - task: PublishTestResults@2
