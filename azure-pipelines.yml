@@ -14,11 +14,11 @@ variables:
   workingDirectory: '$(Build.SourcesDirectory)/src'
 
 steps:
-- script: dotnet restore ./All.sln
+- script: dotnet restore ./*.sln
   displayName: Restore
   workingDirectory: $(workingDirectory)
 
-- script: dotnet build ./All.sln --configuration $(buildConfiguration)
+- script: dotnet build ./*.sln --configuration $(buildConfiguration)
   displayName: Build
   workingDirectory: $(workingDirectory)
 
