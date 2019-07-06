@@ -10,21 +10,24 @@ pool:
   vmImage: 'Ubuntu 16.04'
 
 variables:
+  solution: '**/*.sln'
   buildConfiguration: 'Release'
   workingDirectory: '$(Build.SourcesDirectory)/src'
 
 steps:
-- script: dotnet restore ./*.sln
-  displayName: Restore
-  workingDirectory: $(workingDirectory)
+- task: NuGetToolInstaller@0
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
 
-- script: dotnet build ./*.sln --configuration $(buildConfiguration)
+- script: dotnet build '$(solution)' --configuration $(buildConfiguration)
   displayName: Build
   workingDirectory: $(workingDirectory)
 
-- script: dotnet test ./Tests.sln --configuration $(buildConfiguration) --logger trx
-  displayName: Test
-  workingDirectory: $(workingDirectory)
+- task: VSTest@2
+  inputs:
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
 
 - task: PublishTestResults@2
   displayName: Publish Test Results
