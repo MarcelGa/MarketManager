@@ -20,6 +20,12 @@ steps:
   inputs:
     restoreSolution: '$(solution)'
 
+- task: MSBuild@1
+  inputs:
+    solution: '$(solution)'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+    
 - script: dotnet build '$(solution)' --configuration $(buildConfiguration)
   displayName: Build
   workingDirectory: $(workingDirectory)
