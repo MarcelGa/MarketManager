@@ -7,7 +7,7 @@ trigger:
     include: ['master']
 
 variables:
-  solution: 'MarketManager.sln'
+  solution: '**/*.sln'
   buildConfiguration: 'Release'
   workingDirectory: '$(Build.SourcesDirectory)/src'
 
