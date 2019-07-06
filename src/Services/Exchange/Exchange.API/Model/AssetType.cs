@@ -1,6 +1,6 @@
 ﻿namespace Exchange.API.Model
 {
-    enum AssetType
+    public enum AssetType
     {
         Crypto,
         Currency
