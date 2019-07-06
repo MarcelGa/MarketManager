@@ -10,30 +10,31 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  workingDirectory: '$(Build.SourcesDirectory)/src'
 
-# do this before all your .NET Core tasks
 steps:
-- task: DotNetCoreInstaller@0
-  inputs:
-    version: '2.2.101'
+- script: dotnet restore ./All.sln
+  displayName: Restore
+  workingDirectory: $(workingDirectory)
 
-- task: NuGetToolInstaller@0
+- script: dotnet build ./All.sln --configuration $(buildConfiguration)
+  displayName: Build
+  workingDirectory: $(workingDirectory)
 
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
+- script: dotnet test ./Tests.sln --configuration $(buildConfiguration) --logger trx
+  displayName: Test
+  workingDirectory: $(workingDirectory)
 
-- task: VSBuild@1
+- task: PublishTestResults@2
+  displayName: Publish Test Results
+  condition: succeededOrFailed()
   inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    testRunner: VSTest
+    testResultsFiles: '**/*.trx'
 
-- task: VSTest@2
-  inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+- script: dotnet publish ./MyProject.Web --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)
+  displayName: Publish
+  workingDirectory: $(workingDirectory)
+  
+- task: PublishBuildArtifacts@1
