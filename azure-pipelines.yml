@@ -9,7 +9,7 @@ trigger:
 variables:
   solution: './MarketManager.sln'
   buildConfiguration: 'Release'
-  workingDirectory: '$(Build.SourcesDirectory)/src'
+  workingDirectory: '$(Build.SourcesDirectory)'
 
 steps:
 - script: |
